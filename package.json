@@ -1,0 +1,24 @@
+{
+  "name": "website-angkatan-api",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/fossyy/website-angkatan-api#readme",
+  "bugs": {
+    "url": "https://github.com/fossyy/website-angkatan-api/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fossyy/website-angkatan-api.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
