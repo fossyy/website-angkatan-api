@@ -1,7 +1,7 @@
 import { pool } from "./db.js";
 
 // TODO: CHANGE tableName
-const tableName = "table_name";
+const tableName = "mahasiswa";
 
 export async function sanityCheck() {
   try {
@@ -13,9 +13,18 @@ export async function sanityCheck() {
   }
 }
 
-export async function getStudents() {
+export async function getStudents(items, page) {
+  const parsedItems = parseInt(items)
+  const parsedPage = parseInt(page)
+
+  if (!Number.isInteger(parsedItems))
+    throw new Error("items not an integer")
+  if (!Number.isInteger(parsedPage))
+    throw new Error("page not an integer")
+
+  const offsetPage = (page - 1) * items
   try {
-    const res = await pool.query(`SELECT * FROM ${tableName}`);
+    const res = await pool.query(`SELECT * FROM ${tableName} LIMIT $1 OFFSET $2`, [parsedItems, offsetPage]);
     return res.rows;
   } catch (e) {
     console.error("Failed getting students");
@@ -24,9 +33,10 @@ export async function getStudents() {
 }
 
 export async function getStudentById(id) {
-  const parsedId = Number(id);
+  const parsedId = parseInt(id);
+
   if (!Number.isInteger(parsedId))
-    throw new Error("Invalid id");
+    throw new Error("id not an integer");
 
   try {
     const res = await pool.query(`SELECT * FROM ${tableName} WHERE id = $1`, [parsedId]);
