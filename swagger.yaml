@@ -1,0 +1,14 @@
+swagger: "2.0"
+
+info:
+  version: "1.0.0"
+  title: Api Website Angkatan
+
+paths:
+  /:
+    get:
+      summary: Testing
+      description: Testing Deskripsi
+      responses:
+        "200":
+          description: Testing Deskripsi Jika Status OK
