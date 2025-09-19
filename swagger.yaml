@@ -4,11 +4,50 @@ info:
   version: "1.0.0"
   title: Api Website Angkatan
 
+tags:
+  - name: index
+  - name: mahasiswa
+    description: Semua hal berkaitan dengan menu mahasiswa (list, mahasiswa by id...)
+
+produces:
+  - application/json
+
 paths:
   /:
     get:
+      tags: 
+        - index
       summary: Testing
       description: Testing Deskripsi
       responses:
         "200":
           description: Testing Deskripsi Jika Status OK
+  /mahasiswa:
+    get:
+      tags: 
+        - mahasiswa
+      summary: Mengambil List Mahasiswa
+      description: Return data list mahasiswa beserta data pagination (dalam bentuk JSON, berisi array)
+      parameters:
+        - name: page
+          in: query
+          description: Halaman dalam pagination (opsional; jika kosong, page default yg akan di-load adalah 1)
+          required: False
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+            example: 4
+        - name: search
+          in: query
+          description: Query search untuk memfilter berdasarkan nama mahasiswa (mungkin sekalian nama panggilan, dll?) (opsional)
+          required: False
+          schema:
+            type: string
+            example: "vincent"
+      responses:
+        "200":
+          description: JSON array
+          schema:
+            type: string
+            example: Still WIP
