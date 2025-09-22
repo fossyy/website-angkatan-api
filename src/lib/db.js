@@ -1,10 +1,11 @@
 import { Pool } from 'pg';
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 export const pool = new Pool({
-  connectionString: process.env.PGURL,
+  user: process.env.PGUSER,
+  password: process.env.PGPASSWORD,
+  host: process.env.PGHOST,
+  port: process.env.PGPORT,
+  database: process.env.PGDATABASE,
 })
 
 const now = "\x1b[35m" + new Date().toISOString() + "\x1b[0m";
