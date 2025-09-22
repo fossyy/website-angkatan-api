@@ -1,14 +1,13 @@
 import { Router } from "express";
+import {getStudents} from "../lib/students.js";
 
 const router = Router();
 
 // List mahasiswa (default)
 router.get("/", async (req, res) => {
-  const {page, search} = req.query
+  const {items, page} = req.query
 
-  res.json(req.query);
-  // respons yg dibutuhkan: data2 mahasiswa sesuai page, jumlah page, ___
-  // res.json(getMahasiswa(page, search)); // Function untuk query dari database akan segera datang!!!
+  res.json(await getStudents(items, page));
 });
 
 export default router;
