@@ -27,8 +27,17 @@ paths:
       tags:
         - mahasiswa
       summary: Mengambil List Mahasiswa
-      description: Return data list mahasiswa beserta data pagination (dalam bentuk JSON, berisi array)
+      description: Return data list mahasiswa beserta data pagination
       parameters:
+        - name: items
+          in: query
+          description: Berapa item (jumlah mahasiswa) yang akan di-load per halaman
+          required: True
+          schema:
+            type: integer
+            minimum: 1
+            default: 20
+            example: 20
         - name: page
           in: query
           description: Halaman dalam pagination (opsional; jika kosong, page default yg akan di-load adalah 1)
@@ -38,19 +47,35 @@ paths:
             minimum: 1
             default: 1
             example: 4
-        - name: search
-          in: query
-          description: Query search untuk memfilter berdasarkan nama mahasiswa (mungkin sekalian nama panggilan, dll?) (opsional)
-          required: False
-          schema:
-            type: string
-            example: "vincent"
       responses:
         "200":
           description: JSON array
           schema:
-            type: string
-            example: Still WIP
+            type: object
+            properties:
+              students:
+                type: array
+                description: Data mahasiswa yang muncul
+                properties:
+                  id:
+                    type: integer
+                    description: ID mahasiswa
+              meta:
+                type: object
+                description: Data mengenai pagination
+                properties:
+                  total:
+                    type: integer
+                    description: Jumlah total mahasiswa
+                  totalPages:
+                    type: integer
+                    description: Jumlah total halaman
+                  items: 
+                    type: integer
+                    description: Jumlah item per halaman (sama dengan yang di parameter query)
+                  page:
+                    type: integer
+                    description: Halaman sekarang (sama dengan yang di parameter query)
   /mahasiswa/{id}:
     get:
       tags:
