@@ -4,11 +4,155 @@ info:
   version: "1.0.0"
   title: Api Website Angkatan
 
+tags:
+  - name: index
+  - name: mahasiswa
+    description: Semua hal berkaitan dengan menu mahasiswa (list, mahasiswa by id...)
+
+produces:
+  - application/json
+
 paths:
   /:
     get:
+      tags:
+        - index
       summary: Testing
       description: Testing Deskripsi
       responses:
         "200":
           description: Testing Deskripsi Jika Status OK
+  /mahasiswa:
+    get:
+      tags:
+        - mahasiswa
+      summary: Mengambil List Mahasiswa
+      description: Return data list mahasiswa beserta data pagination
+      parameters:
+        - name: items
+          in: query
+          description: Berapa item (jumlah mahasiswa) yang akan di-load per halaman
+          required: True
+          schema:
+            type: integer
+            minimum: 1
+            default: 20
+            example: 20
+        - name: page
+          in: query
+          description: Halaman dalam pagination (opsional; jika kosong, page default yg akan di-load adalah 1)
+          required: False
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+            example: 4
+      responses:
+        "200":
+          description: JSON array
+          schema:
+            type: object
+            properties:
+              students:
+                type: array
+                description: Data mahasiswa yang muncul
+                properties:
+                  id:
+                    type: integer
+                    description: ID mahasiswa
+              meta:
+                type: object
+                description: Data mengenai pagination
+                properties:
+                  total:
+                    type: integer
+                    description: Jumlah total mahasiswa
+                  totalPages:
+                    type: integer
+                    description: Jumlah total halaman
+                  items: 
+                    type: integer
+                    description: Jumlah item per halaman (sama dengan yang di parameter query)
+                  page:
+                    type: integer
+                    description: Halaman sekarang (sama dengan yang di parameter query)
+  /mahasiswa/{id}:
+    get:
+      tags:
+        - mahasiswa
+      summary: Mengambil Data Mahasiswa Berdasarkan ID
+      description: Return data detail mahasiswa berdasarkan ID yang diberikan
+      parameters:
+        - name: id
+          in: path
+          description: ID unik mahasiswa
+          required: true
+          type: integer
+          minimum: 1
+          example: 1
+      responses:
+        "200":
+          description: Data mahasiswa berhasil ditemukan
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              message:
+                type: string
+                example: "Data mahasiswa berhasil ditemukan"
+              data:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  nama:
+                    type: string
+                    example: "Ahmad Fayyad"
+                  nim:
+                    type: string
+                    example: "2021001"
+                  jurusan:
+                    type: string
+                    example: "Informatika"
+                  angkatan:
+                    type: integer
+                    example: 2021
+        "400":
+          description: ID mahasiswa tidak valid
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: "ID mahasiswa harus berupa angka yang valid"
+        "404":
+          description: Mahasiswa dengan ID tersebut tidak ditemukan
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: "Mahasiswa dengan ID 999 tidak ditemukan"
+        "500":
+          description: Terjadi kesalahan internal server
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: "Terjadi kesalahan internal server"
+              error:
+                type: string
+                example: "Database connection failed"

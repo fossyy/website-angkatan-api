@@ -3,16 +3,6 @@ import { pool } from "./db.js";
 // TODO: CHANGE tableName
 const tableName = "mahasiswa";
 
-export async function sanityCheck() {
-  try {
-    const res = await pool.query("SELECT $1::text as message", ["YOU'RE SANE!!!"]);
-    return res.rows;
-  } catch (e) {
-    console.error("YOU'RE INSANE!!!")
-    throw e;
-  }
-}
-
 export async function getStudents(items, page) {
   const parsedItems = parseInt(items, 10);
   const parsedPage = parseInt(page, 10);
