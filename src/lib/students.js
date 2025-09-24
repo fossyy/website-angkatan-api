@@ -3,7 +3,7 @@ import { pool } from "./db.js";
 // TODO: CHANGE tableName
 const tableName = "mahasiswa";
 
-export async function getStudents(items, page) {
+export async function getStudents(items = 10, page) {
   const parsedItems = parseInt(items, 10);
   const parsedPage = parseInt(page, 10);
 
