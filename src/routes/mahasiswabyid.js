@@ -1,15 +1,7 @@
 import { Router } from "express";
-import { getStudents } from "../lib/students.js";
 import { getStudentById } from "../lib/students.js";
 
 const router = Router();
-
-// List mahasiswa (default)
-router.get("/", async (req, res) => {
-  const { items, page } = req.query
-
-  res.json(await getStudents(items, page));
-});
 
 // Get mahasiswa by ID
 router.get("/:id", async (req, res) => {
