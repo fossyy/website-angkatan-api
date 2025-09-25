@@ -7,8 +7,8 @@ export async function getStudents(items = 10, page) {
   const parsedItems = parseInt(items, 10);
   const parsedPage = parseInt(page, 10);
 
-  if (!Number.isInteger(parsedItems) || parsedItems <= 0)
-    throw new Error("items must be a positive integer");
+  if (!Number.isInteger(parsedItems) || parsedItems <= 0 || parsedItems > 20)
+    throw new Error("items must be a positive integer less than 21");
   if (!Number.isInteger(parsedPage) || parsedPage <= 0)
     throw new Error("page must be a positive integer");
 
