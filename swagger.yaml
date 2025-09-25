@@ -132,9 +132,8 @@ paths:
                     type: integer
                     description: Halaman sekarang (sama dengan yang di parameter query)
                     example: 4
-        # Untuk server response lainnya belum dites
         "500":
-          description: Thrown error (misal: parameter tidak sesuai) atau kesalahan internal
+          description: Thrown error jika parameter tidak sesuai atau kesalahan internal
           schema:
             type: object
             properties:
