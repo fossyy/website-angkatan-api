@@ -31,35 +31,87 @@ paths:
       parameters:
         - name: items
           in: query
-          description: Berapa item (jumlah mahasiswa) yang akan di-load per halaman
-          required: True
-          schema:
-            type: integer
-            minimum: 1
-            default: 20
-            example: 20
-        - name: page
-          in: query
-          description: Halaman dalam pagination (opsional; jika kosong, page default yg akan di-load adalah 1)
+          description: Berapa item (jumlah mahasiswa) yang akan di-load per halaman; opsional, jika kosong defaultnya 10
           required: False
           schema:
             type: integer
             minimum: 1
-            default: 1
-            example: 4
+            default: 10
+            example: 10
+        - name: page
+          in: query
+          description: Halaman dalam pagination (set by user)
+          required: True
+          schema:
+            type: integer
+            minimum: 1
+            example: 1
       responses:
         "200":
-          description: JSON array
+          description: Berhasil melakukan query; return JSON array
           schema:
             type: object
             properties:
               students:
                 type: array
                 description: Data mahasiswa yang muncul
-                properties:
-                  id:
-                    type: integer
-                    description: ID mahasiswa
+                items:
+                  properties:
+                    id:
+                      type: integer
+                      description: ID mahasiswa
+                      example: 42
+                    nama:
+                      type: string
+                      description: Nama mahasiswa
+                      example: Johann Sebastian Bach
+                    jurusan:
+                      type: string
+                      description: Jurusan mahasiswa (Ilmu Komputer/Sistem Informasi)
+                      example: Ilmu Komputer
+                    ttl:
+                      type: string
+                      description: Tempat tanggal lahir
+                      example: 2001-03-14T17:00:00.000Z
+                    sosmed:
+                      type: array
+                      description: Array berisi data setiap sosmed yang dimiliki mahasiswa
+                      items:
+                        type: object
+                        description: Data per sosmed
+                        properties:
+                          data:
+                            type: string
+                            description: Username atau link (sesuai sosmed; misal, linkedin memakai link)
+                          type:
+                            type: string
+                            description: Nama sosmed tersebut
+                      example:
+                        - data: goldenlamian
+                          type: instagram
+                        - data: https://linkedin.com/in/vincent....
+                          type: linkedin
+                    description:
+                      type: string
+                      description: Deskripsi/bio mahasiswa
+                      example: happily drowning in assignments :D
+                    message:
+                      type: string
+                      example: makasih teman2 web dev lainnya, semangat perjuangannya
+                    interests:
+                      type: array
+                      description: Array berisi semua interest mahasiswa
+                      items:
+                        type: string
+                        description: Salah satu interest Mahasiswa
+                      example:
+                        - "Backend Developemnt"
+                        - "Music"
+                        - "Kidnapping"
+                    avatar:
+                      type: string
+                      description: Nama image? dari avatar/profile picture mahasiswa
+                      example: c813ae6a-dcd2-416d-9907-dQw4w9WgXcQ
               meta:
                 type: object
                 description: Data mengenai pagination
@@ -67,15 +119,34 @@ paths:
                   total:
                     type: integer
                     description: Jumlah total mahasiswa
+                    example: 462
                   totalPages:
                     type: integer
                     description: Jumlah total halaman
+                    example: 47
                   items: 
                     type: integer
                     description: Jumlah item per halaman (sama dengan yang di parameter query)
+                    example: 10
                   page:
                     type: integer
                     description: Halaman sekarang (sama dengan yang di parameter query)
+                    example: 4
+        # Untuk server response lainnya belum dites
+        "500":
+          description: Thrown error (misal: parameter tidak sesuai) atau kesalahan internal
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: "Terjadi kesalahan internal server"
+              error:
+                type: string
+                example: "Database connection failed"
   /mahasiswa/{id}:
     get:
       tags:
