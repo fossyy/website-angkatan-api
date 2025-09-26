@@ -180,16 +180,52 @@ paths:
                     example: 1
                   nama:
                     type: string
-                    example: "Ahmad Fayyad"
-                  nim:
-                    type: string
-                    example: "2021001"
+                    example: "Andi Pratama"
                   jurusan:
                     type: string
-                    example: "Informatika"
-                  angkatan:
-                    type: integer
-                    example: 2021
+                    example: "Ilmu Komputer"
+                  ttl:
+                    type: string
+                    description: Tempat tanggal lahir mahasiswa
+                    example: "2001-03-15T00:00:00.000Z"
+                  sosmed:
+                    type: array
+                    description: Daftar akun media sosial mahasiswa
+                    items:
+                      type: object
+                      properties:
+                        data:
+                          type: string
+                          description: Username atau link (sesuai sosmed)
+                        type:
+                          type: string
+                          description: Jenis sosmed
+                    example:
+                      - data: "andi_ig"
+                        type: "instagram"
+                      - data: "https://linkedin.com/in/andi"
+                        type: "linkedin"
+                  description:
+                    type: string
+                    description: Bio/Deskripsi mahasiswa
+                    example: "Suka belajar AI."
+                  message:
+                    type: string
+                    description: Pesan pribadi dari mahasiswa
+                    example: "Halo semua!"
+                  interests:
+                    type: array
+                    description: Daftar interest mahasiswa
+                    items:
+                      type: string
+                    example:
+                      - "AI"
+                      - "Coding"
+                      - "Gaming"
+                  avatar:
+                    type: string
+                    description: Nama file avatar/profile picture mahasiswa
+                    example: "c813ae6a-dcd2-416d-9907-5849deb3bd5d"
         "400":
           description: ID mahasiswa tidak valid
           schema:
