@@ -19,10 +19,6 @@ dotenv.config();
 app.use(corsConfig);
 app.use(logger);
 
-app.get("/error", (req, res) => {
-  throw new Error("Something broke!");
-});
-
 app.use("/", indexRoutes);
 app.use("/mahasiswa", mahasiswaRoutes);
 app.use("/api-docs", swaggerUi.serve);
