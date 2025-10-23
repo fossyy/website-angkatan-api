@@ -16,6 +16,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "node server.js",
+    "migrate": "node migrate.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
