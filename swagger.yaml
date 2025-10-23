@@ -262,3 +262,54 @@ paths:
               error:
                 type: string
                 example: "Database connection failed"
+  /gallery:
+    get:
+      tags:
+        - images
+      summary: Mendapatkan daftar semua gambar
+      description: Mengembalikan array berisi semua gambar yang telah diupload
+      responses:
+        "200":
+          description: Berhasil mengambil semua gambar
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    title:
+                      type: string
+                      example: "bahlil"
+                    type:
+                      type: string
+                      example: "jpg"
+                    link:
+                      type: string
+                      format: uri
+                      example: "https://cdn.s3.filekeeper.my.id/angkatan/gallery/bahlil.jpg"
+                    uploaded_at:
+                      type: string
+                      format: date-time
+                      example: "2025-10-23T06:51:03.184Z"
+        "500":
+          description: Terjadi kesalahan internal server
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: "Terjadi kesalahan internal server"
+              error:
+                type: string
+                example: "Database connection failed"
