@@ -22,3 +22,23 @@ export async function uploadNewObject(objectName, data, contentType) {
         throw err
     }
 }
+
+export async function removeObject(objectName) {
+    try {
+        await S3_CLIENT.removeObject(bucket, objectName)
+        console.log(`Successfully remove ${objectName} from bucket ${bucket}`)
+    } catch (err) {
+        console.error('Error remove object:', err)
+        throw err
+    }
+}
+
+export async function copyObject(src, dest) {
+    try {
+        await S3_CLIENT.copyObject(bucket, dest,  `/${bucket}/${src}`)
+        console.log(`Successfully copy ${src} to ${dest}`)
+    } catch (err) {
+        console.error('Error copy object:', err)
+        throw err
+    }
+}

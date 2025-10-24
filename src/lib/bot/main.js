@@ -1,7 +1,7 @@
 import { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder } from 'discord.js';
 import 'dotenv/config';
-import { uploadNewObject } from '../s3.js';
-import { insertImage } from '../gallery.js';
+import { copyObject, removeObject, uploadNewObject } from '../s3.js';
+import { getImageByID, insertImage, removeImageByID, updateImageLink, updateImageTitle } from '../gallery.js';
 
 export const startBot = async (token, clientId, guildId) => {
     const client = new Client({
@@ -69,7 +69,7 @@ export const startBot = async (token, clientId, guildId) => {
                 const arrayBuffer = await response.arrayBuffer();
                 const buffer = Buffer.from(arrayBuffer);
                 uploadNewObject(`gallery/${title}.${type}`, buffer, `image/${type}`)
-                const id = insertImage(title, `cdn.s3.filekeeper.my.id/angkatan/gallery/${title}.${type}`)
+                const id = await insertImage(title, `cdn.s3.filekeeper.my.id/angkatan/gallery/${title}.${type}`)
                 interaction.followUp({ content: `Image uploaded with ID **${id}**!` });
             });
 
@@ -81,11 +81,44 @@ export const startBot = async (token, clientId, guildId) => {
         }
 
         else if (sub === 'update') {
-             // TODO: implement bang
+            const id = interaction.options.getInteger('id');
+            const title = interaction.options.getString('title');
+            const link = await updateImageTitle(id, title)
+            try {
+                const path = new URL(link.startsWith('http') ? link : `https://${link}`).pathname;
+                const parts = path.split('/').filter(Boolean);
+                parts.shift()
+                const oldPath = parts.join('/')
+                const oldFile = parts.pop()
+                parts.push(title + '.' + oldFile.split('.').at(-1))
+                const newPath = parts.join('/')
+                console.log(newPath)
+                await copyObject(oldPath, newPath)
+                await removeObject(oldPath)
+                await updateImageLink(id, 'cdn.s3.filekeeper.my.id/angkatan/' + newPath)
+                await interaction.reply({ content: `Image with ID **${id}** has been updated to **${title}**!` });
+            } catch (e) {
+                console.log(e)
+                await interaction.reply({ content: `Error njir` });
+            }
         }
 
         else if (sub === 'remove') {
-            // TODO: implement bang
+            const id = interaction.options.getInteger('id');
+            try {
+                const image = await getImageByID(id)
+                const link = image.link
+                const path = new URL(link.startsWith('http') ? link : `https://${link}`).pathname;
+                const parts = path.split('/').filter(Boolean);
+                parts.shift()
+                const opjectPath = parts.join('/')
+                await removeImageByID(id)
+                await removeObject(opjectPath)
+                await interaction.reply({ content: `Image with ID **${id}** has been remove` });
+            } catch (e) {
+                console.error('Error removing image by ID:', err);
+                throw err;
+            }
         }
     });
 
