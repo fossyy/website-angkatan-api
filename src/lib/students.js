@@ -54,3 +54,46 @@ export async function getStudentById(id) {
     throw e;
   }
 }
+
+export async function getStudentByTags(jurusanTags, interestsTags, searchMode = "or") {
+  jurusanTags = Array.isArray(jurusanTags) ? jurusanTags : [jurusanTags];
+  interestsTags = Array.isArray(interestsTags) ? interestsTags : [interestsTags];
+
+  if (jurusanTags.length == 0 && interestsTags.length == 0) return [];
+
+  try {
+    const params = [];
+    const clauses = [];
+
+    if (searchMode === "or") {
+      if (jurusanTags.length) {
+        params.push(jurusanTags);
+        clauses.push(`jurusan = ANY($${params.length})`);
+      }
+      if (interestsTags.length) {
+        params.push(interestsTags);
+        clauses.push(`interests && $${params.length}`);
+      }
+      const where = clauses.length ? clauses.join(" OR ") : "TRUE";
+      const sql = `SELECT * FROM ${tableName} WHERE ${where}`;
+      const res = await pool.query(sql, params);
+      return res.rows;
+    } else {
+      if (jurusanTags.length) {
+        params.push(jurusanTags);
+        clauses.push(`jurusan = ANY($${params.length})`);
+      }
+      if (interestsTags.length) {
+        params.push(interestsTags);
+        clauses.push(`interests @> $${params.length}`);
+      }
+      const where = clauses.length ? clauses.join(" AND ") : "TRUE";
+      const sql = `SELECT * FROM ${tableName} WHERE ${where}`;
+      const res = await pool.query(sql, params);
+      return res.rows;
+    }
+  } catch (e) {
+    console.error(`Failed getting student by tags: jurusan=${jurusanTags}, interests=${interestsTags}`, e);
+    throw e;
+  }
+}

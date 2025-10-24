@@ -1,6 +1,5 @@
 import { Router } from "express";
-import { getStudents } from "../lib/students.js";
-import { getStudentById } from "../lib/students.js";
+import { getStudents, getStudentById, getStudentByTags } from "../lib/students.js";
 
 const router = Router();
 
@@ -10,6 +9,50 @@ router.get("/", async (req, res) => {
 
   res.json(await getStudents(items, page));
 });
+
+// Get mahasiswa by tags
+router.get("/tags", async (req, res) => {
+  const jurusanList = new Set(["Ilmu Komputer", "Sistem Informasi", "Ilmu Komputer KKI"]);
+
+  try {
+    const { tags, mode } = req.query;
+
+    if (!tags) {
+      return res.status(400).json({
+        success: false,
+        message: "Query tags malformed",
+      })
+    }
+
+    const parsedTags = Array.isArray(tags) ? tags.map(t => t.trim()) : [tags.trim()];
+
+    const jurusanTags = parsedTags.filter(t => jurusanList.has(t));
+    const interestsTags = parsedTags.filter(t => !jurusanList.has(t));
+    const searchMode = (mode && mode.toLowerCase() === "and") ? "and" : "or";
+
+    const students = await getStudentByTags(jurusanTags, interestsTags, searchMode);
+
+    if (!students || students.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Tidak ada mahasiswa dengan tags tersebut",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Data mahasiswa berhasil ditemukan",
+      data: students,
+    });
+  } catch (error) {
+    console.error("Error getting student by tags:", error);
+    res.status(500).json({
+      success: false,
+      message: "Terjadi kesalahan internal server",
+      error: process.env.NODE_ENV === "development" ? error.message : undefined,
+    })
+  }
+})
 
 // Get mahasiswa by ID
 router.get("/:id", async (req, res) => {
