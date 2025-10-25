@@ -1,5 +1,5 @@
 import { Router } from 'express';      
-import { getAllLinks, getLinkById, getLinksByCategory } from '../lib/arunglink.js';
+import { getAllLinks, getLinkBySlug, getLinksByCategory } from '../lib/arunglink.js';
 
 const router = Router();
 
@@ -21,11 +21,11 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:slug', async (req, res) => {
   try {
-    const { id } = req.params;
+    const { slug } = req.params;
     
-    const data = await getLinkById(id);
+    const data = await getLinkBySlug(id);
     
     if (!data) {
       return res.status(404).json({
