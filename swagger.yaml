@@ -286,9 +286,9 @@ paths:
                 items:
                   type: object
                   properties:
-                    id:
-                      type: integer
-                      example: 1
+                    slug:
+                      type: string
+                      example: "portal-akademik-ui"
                     title:
                       type: string
                       example: "Portal Akademik UI"
@@ -315,20 +315,20 @@ paths:
               message:
                 type: string
                 example: "Failed to fetch arunglink data"
-  /arunglink/{id}:
+
+  /arunglink/{slug}:
     get:
       tags:
         - arunglink
-      summary: Mendapatkan link berdasarkan ID
-      description: Mengembalikan detail link berdasarkan ID yang diberikan
+      summary: Mendapatkan link berdasarkan slug
+      description: Mengembalikan detail link berdasarkan slug unik (contoh: `/arunglink/portal-akademik-ui`)
       parameters:
-        - name: id
+        - name: slug
           in: path
-          description: ID unik link
+          description: Slug unik dari link (bisa dibuat manual atau otomatis)
           required: true
-          type: integer
-          minimum: 1
-          example: 1
+          type: string
+          example: "portal-akademik-ui"
       responses:
         "200":
           description: Link berhasil ditemukan
@@ -341,9 +341,9 @@ paths:
               data:
                 type: object
                 properties:
-                  id:
-                    type: integer
-                    example: 1
+                  slug:
+                    type: string
+                    example: "portal-akademik-ui"
                   title:
                     type: string
                     example: "Portal Akademik UI"
@@ -381,6 +381,7 @@ paths:
               message:
                 type: string
                 example: "Failed to fetch arunglink data"
+
   /arunglink/category/{category}:
     get:
       tags:
@@ -409,9 +410,9 @@ paths:
                 items:
                   type: object
                   properties:
-                    id:
-                      type: integer
-                      example: 1
+                    slug:
+                      type: string
+                      example: "portal-akademik-ui"
                     title:
                       type: string
                       example: "Portal Akademik UI"
