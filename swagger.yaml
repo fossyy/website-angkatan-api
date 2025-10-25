@@ -321,7 +321,7 @@ paths:
       tags:
         - arunglink
       summary: Mendapatkan link berdasarkan slug
-      description: Mengembalikan detail link berdasarkan slug unik (contoh: `/arunglink/portal-akademik-ui`)
+      description: Mengembalikan detail link berdasarkan slug unik
       parameters:
         - name: slug
           in: path
