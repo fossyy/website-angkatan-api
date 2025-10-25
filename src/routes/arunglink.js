@@ -25,7 +25,7 @@ router.get('/:slug', async (req, res) => {
   try {
     const { slug } = req.params;
     
-    const data = await getLinkBySlug(id);
+    const data = await getLinkBySlug(slug);
     
     if (!data) {
       return res.status(404).json({
