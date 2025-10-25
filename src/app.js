@@ -29,7 +29,7 @@ app.use("/mahasiswa", mahasiswaRoutes);
 app.use("/api-docs", swaggerUi.serve);
 app.get("/api-docs", swaggerUi.setup(swaggerDocument));
 app.get("/gallery", galleryRoute)
-app.use("/api/arunglink", arunglinkRoute);
+app.use("/arunglink", arunglinkRoute);
 app.use((req, res) => {
   res.status(404).json({ error: "Not Found" });
 });
