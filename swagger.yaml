@@ -8,6 +8,9 @@ tags:
   - name: index
   - name: mahasiswa
     description: Semua hal berkaitan dengan menu mahasiswa (list, mahasiswa by id...)
+  - name: arunglink
+    description: Semua hal berkaitan dengan arunglink (list link, link by id, link by category...)
+  - name: images
 
 produces:
   - application/json
@@ -263,6 +266,177 @@ paths:
               error:
                 type: string
                 example: "Database connection failed"
+  /arunglink:
+    get:
+      tags:
+        - arunglink
+      summary: Mendapatkan semua link
+      description: Mengembalikan array berisi semua link yang telah diupload
+      responses:
+        "200":
+          description: Berhasil mengambil semua link
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    title:
+                      type: string
+                      example: "Portal Akademik UI"
+                    category:
+                      type: string
+                      enum: [academic, administration, organization, event]
+                      example: "academic"
+                    link:
+                      type: string
+                      format: uri
+                      example: "https://academic.ui.ac.id"
+                    uploaded_at:
+                      type: string
+                      format: date-time
+                      example: "2025-01-15T10:30:00.000Z"
+        "500":
+          description: Terjadi kesalahan internal server
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: "Failed to fetch arunglink data"
+  /arunglink/{id}:
+    get:
+      tags:
+        - arunglink
+      summary: Mendapatkan link berdasarkan ID
+      description: Mengembalikan detail link berdasarkan ID yang diberikan
+      parameters:
+        - name: id
+          in: path
+          description: ID unik link
+          required: true
+          type: integer
+          minimum: 1
+          example: 1
+      responses:
+        "200":
+          description: Link berhasil ditemukan
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              data:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  title:
+                    type: string
+                    example: "Portal Akademik UI"
+                  category:
+                    type: string
+                    enum: [academic, administration, organization, event]
+                    example: "academic"
+                  link:
+                    type: string
+                    format: uri
+                    example: "https://academic.ui.ac.id"
+                  uploaded_at:
+                    type: string
+                    format: date-time
+                    example: "2025-01-15T10:30:00.000Z"
+        "404":
+          description: Link tidak ditemukan
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: "Arunglink not found"
+        "500":
+          description: Terjadi kesalahan internal server
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: "Failed to fetch arunglink data"
+  /arunglink/category/{category}:
+    get:
+      tags:
+        - arunglink
+      summary: Mendapatkan link berdasarkan kategori
+      description: Mengembalikan array link yang sesuai dengan kategori tertentu
+      parameters:
+        - name: category
+          in: path
+          description: Kategori link (academic, administration, organization, event)
+          required: true
+          type: string
+          enum: [academic, administration, organization, event]
+          example: "academic"
+      responses:
+        "200":
+          description: Berhasil mengambil link berdasarkan kategori
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    title:
+                      type: string
+                      example: "Portal Akademik UI"
+                    category:
+                      type: string
+                      example: "academic"
+                    link:
+                      type: string
+                      format: uri
+                      example: "https://academic.ui.ac.id"
+                    uploaded_at:
+                      type: string
+                      format: date-time
+                      example: "2025-01-15T10:30:00.000Z"
+        "500":
+          description: Terjadi kesalahan internal server
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: "Failed to fetch arunglink data by category"
   /gallery:
     get:
       tags:
