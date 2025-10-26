@@ -8,6 +8,9 @@ tags:
   - name: index
   - name: mahasiswa
     description: Semua hal berkaitan dengan menu mahasiswa (list, mahasiswa by id...)
+  - name: arunglink
+    description: Semua hal berkaitan dengan arunglink (list link, link by id, link by category...)
+  - name: images
 
 produces:
   - application/json
@@ -551,6 +554,7 @@ paths:
               message:
                 type: string
                 example: "Failed to fetch arunglink data"
+
   /arunglink/category/{category}:
     get:
       tags:
