@@ -55,7 +55,7 @@ export async function getStudentById(id) {
   }
 }
 
-export async function getStudentByTags(jurusanTags, interestsTags, searchMode = "or", items = 10, page) {
+export async function getStudentByTags(jurusanTags, interestsTags, searchMode = "and", items = 10, page) {
   const parsedItems = parseInt(items, 10);
   const parsedPage = parseInt(page, 10);
 
@@ -95,10 +95,7 @@ export async function getStudentByTags(jurusanTags, interestsTags, searchMode = 
     const joiner = searchMode === "or" ? " OR " : " AND ";
     const where = clauses.length ? clauses.join(joiner) : "TRUE";
 
-    const limitIdx = params.length + 1;
     params.push(parsedItems);
-
-    const offsetIdx = params.length + 1;
     params.push(offsetPage);
 
     const sql = `
@@ -106,7 +103,7 @@ export async function getStudentByTags(jurusanTags, interestsTags, searchMode = 
         FROM ${tableName}
         WHERE ${where}
         ORDER BY id
-        LIMIT $${limitIdx} OFFSET $${offsetIdx}
+        LIMIT $${params.length - 1} OFFSET $${params.length}
       `;
 
     const res = await pool.query(sql, params);
