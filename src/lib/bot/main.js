@@ -61,6 +61,15 @@ export const startBot = async (token, clientId, guildId) => {
                                 { name: 'Organization', value: 'organization' },
                                 { name: 'Event', value: 'event' }
                             )
+                    ).addStringOption(opt =>
+                        opt.setName('status')
+                            .setDescription('status of the link (e.g., ongoing, new, none)')
+                            .setRequired(true)
+                            .addChoices(
+                                { name: 'ongoing', value: 'on' },
+                                { name: 'new', value: 'new' },
+                                { name: 'none', value: 'none' },
+                            )
                     )
                     .addStringOption(opt => opt.setName('link').setDescription('URL of the link').setRequired(true))
                     .addStringOption(opt =>
@@ -159,9 +168,10 @@ export const startBot = async (token, clientId, guildId) => {
                 const category = interaction.options.getString('category');
                 const link = interaction.options.getString('link');
                 const slugInput = interaction.options.getString('slug');
+                const status = interaction.options.getString('status');
 
                 try {
-                    const slug = await insertArunglink(title, category, link, slugInput);
+                    const slug = await insertArunglink(title, category, link, status, slugInput);
                     await interaction.reply({
                         content: `Link added!\n• **Title:** ${title}\n• **Category:** ${category}\n• **Slug:** ${slug}\n`
                     });
