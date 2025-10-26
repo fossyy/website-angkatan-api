@@ -436,6 +436,177 @@ paths:
               error:
                 type: string
                 example: "Database connection failed"
+  /arunglink:
+    get:
+      tags:
+        - arunglink
+      summary: Mendapatkan semua link
+      description: Mengembalikan array berisi semua link yang telah diupload
+      responses:
+        "200":
+          description: Berhasil mengambil semua link
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    slug:
+                      type: string
+                      example: "portal-akademik-ui"
+                    title:
+                      type: string
+                      example: "Portal Akademik UI"
+                    category:
+                      type: string
+                      enum: [academic, administration, organization, event]
+                      example: "academic"
+                    link:
+                      type: string
+                      format: uri
+                      example: "https://academic.ui.ac.id"
+                    uploaded_at:
+                      type: string
+                      format: date-time
+                      example: "2025-01-15T10:30:00.000Z"
+        "500":
+          description: Terjadi kesalahan internal server
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: "Failed to fetch arunglink data"
+
+  /arunglink/{slug}:
+    get:
+      tags:
+        - arunglink
+      summary: Mendapatkan link berdasarkan slug
+      description: Mengembalikan detail link berdasarkan slug unik
+      parameters:
+        - name: slug
+          in: path
+          description: Slug unik dari link (bisa dibuat manual atau otomatis)
+          required: true
+          type: string
+          example: "portal-akademik-ui"
+      responses:
+        "200":
+          description: Link berhasil ditemukan
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              data:
+                type: object
+                properties:
+                  slug:
+                    type: string
+                    example: "portal-akademik-ui"
+                  title:
+                    type: string
+                    example: "Portal Akademik UI"
+                  category:
+                    type: string
+                    enum: [academic, administration, organization, event]
+                    example: "academic"
+                  link:
+                    type: string
+                    format: uri
+                    example: "https://academic.ui.ac.id"
+                  uploaded_at:
+                    type: string
+                    format: date-time
+                    example: "2025-01-15T10:30:00.000Z"
+        "404":
+          description: Link tidak ditemukan
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: "Arunglink not found"
+        "500":
+          description: Terjadi kesalahan internal server
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: "Failed to fetch arunglink data"
+  /arunglink/category/{category}:
+    get:
+      tags:
+        - arunglink
+      summary: Mendapatkan link berdasarkan kategori
+      description: Mengembalikan array link yang sesuai dengan kategori tertentu
+      parameters:
+        - name: category
+          in: path
+          description: Kategori link (academic, administration, organization, event)
+          required: true
+          type: string
+          enum: [academic, administration, organization, event]
+          example: "academic"
+      responses:
+        "200":
+          description: Berhasil mengambil link berdasarkan kategori
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    slug:
+                      type: string
+                      example: "portal-akademik-ui"
+                    title:
+                      type: string
+                      example: "Portal Akademik UI"
+                    category:
+                      type: string
+                      example: "academic"
+                    link:
+                      type: string
+                      format: uri
+                      example: "https://academic.ui.ac.id"
+                    uploaded_at:
+                      type: string
+                      format: date-time
+                      example: "2025-01-15T10:30:00.000Z"
+        "500":
+          description: Terjadi kesalahan internal server
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: "Failed to fetch arunglink data by category"
   /gallery:
     get:
       tags:
