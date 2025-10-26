@@ -9,6 +9,22 @@ const TEST_DATA = [
     link: 'https://scele.ui.ac.id',
     status: 'on',
     uploaded_at: '2025-01-20T08:00:00.000Z'
+  },
+  {
+    slug: 'github-repo',
+    title: 'Github Repository',
+    category: 'administration',
+    link: 'https://github.com',
+    status: 'on',
+    uploaded_at: '2025-09-20T08:00:00.000Z'
+  },
+  {
+    slug: 'discord-link',
+    title: 'Discord Link',
+    category: 'event',
+    link: 'https://discord.com/',
+    status: 'none',
+    uploaded_at: '2024-01-20T08:00:00.000Z'
   }
 ];
 
