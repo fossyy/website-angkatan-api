@@ -286,7 +286,8 @@ paths:
             "and" berarti mahasiswa harus memiliki semua tags yang diberikan,
             "or" berarti mahasiswa harus memiliki minimal salah satu tags yang diberikan.
             Note: Jurusan selalu dalam mode "or"
-          required: True
+            default: "or"
+          required: false
           schema:
             type: string
             enum:
