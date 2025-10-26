@@ -281,7 +281,7 @@ paths:
           required: True
           schema:
             type: string
-            example: "Ilmu Komputer"
+            example: "Ilmu Komputer, Cyber Security, Competitive Programming"
         - name: mode
           in: query
           description: |
@@ -289,14 +289,14 @@ paths:
             "and" berarti mahasiswa harus memiliki semua tags yang diberikan,
             "or" berarti mahasiswa harus memiliki minimal salah satu tags yang diberikan.
             Note: Jurusan selalu dalam mode "or"
-            default: "or"
+            default: "and"
           required: false
           schema:
             type: string
             enum:
               - and
               - or
-            example: or
+            example: and
         - name: items
           in: query
           description: Berapa item (jumlah mahasiswa) yang akan di-load per halaman; opsional, jika kosong defaultnya 10; Maksimum item per halaman adalah 20
