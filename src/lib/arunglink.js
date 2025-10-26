@@ -1,5 +1,17 @@
 import { pool } from "./db.js";
 
+const MOCK_MODE = true;
+const TEST_DATA = [
+  {
+    slug: 'scele-ui',
+    title: 'SCELE UI',
+    category: 'academic',
+    link: 'https://scele.ui.ac.id',
+    status: 'on',
+    uploaded_at: '2025-01-20T08:00:00.000Z'
+  }
+];
+
 function slugify(text) {
   return text
     .toString()
@@ -40,6 +52,8 @@ export async function removeArungLinkBySlug(slug) {
 
 // Get all links
 export async function getAllLinks() {
+  if (MOCK_MODE) return TEST_DATA; // Uncomment untuk testing
+  
   const query = `
     SELECT slug, title, category, link, status, uploaded_at
     FROM arunglink
