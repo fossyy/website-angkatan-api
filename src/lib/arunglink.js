@@ -11,7 +11,8 @@ function slugify(text) {
     .replace(/^-+|-+$/g, "");
 }
 
-export async function insertArunglink(title, category, link, slugInput = "auto") {
+// Insert new link
+export async function insertArunglink(title, category, link, status = 'none', slugInput = "auto") {
   let slug = slugInput === "auto" ? slugify(title) : slugify(slugInput);
   let baseSlug = slug;
   let counter = 1;
@@ -23,22 +24,24 @@ export async function insertArunglink(title, category, link, slugInput = "auto")
   }
 
   const query = `
-    INSERT INTO arunglink (slug, title, category, link)
-    VALUES ($1, $2, $3, $4)
+    INSERT INTO arunglink (slug, title, category, link, status)
+    VALUES ($1, $2, $3, $4, $5)
     RETURNING slug;
   `;
-  const values = [slug, title, category, link];
+  const values = [slug, title, category, link, status];
   const result = await pool.query(query, values);
   return result.rows[0].slug;
 }
 
+// Remove link by slug
 export async function removeArungLinkBySlug(slug) {
   await pool.query(`DELETE FROM arunglink WHERE slug = $1;`, [slug]);
 }
 
+// Get all links
 export async function getAllLinks() {
   const query = `
-    SELECT slug, title, category, link, uploaded_at
+    SELECT slug, title, category, link, status, uploaded_at
     FROM arunglink
     ORDER BY uploaded_at DESC;
   `;
@@ -46,9 +49,10 @@ export async function getAllLinks() {
   return result.rows;
 }
 
+// Get link by slug
 export async function getLinkBySlug(slug) {
   const query = `
-    SELECT slug, title, category, link, uploaded_at
+    SELECT slug, title, category, link, status, uploaded_at
     FROM arunglink
     WHERE slug = $1;
   `;
@@ -56,13 +60,50 @@ export async function getLinkBySlug(slug) {
   return result.rows[0];
 }
 
-export async function getLinksByCategory(category) {
+// Filter links
+export async function getFilteredLinks(filters = {}) {
+  const { category, from, to, search } = filters;
+  
+  const conditions = [];
+  const values = [];
+  let paramCounter = 1;
+
+  if (category) {
+    conditions.push(`category = $${paramCounter}`);
+    values.push(category);
+    paramCounter++;
+  }
+
+  if (from) {
+    conditions.push(`uploaded_at >= $${paramCounter}`);
+    values.push(from);
+    paramCounter++;
+  }
+
+  if (to) {
+    conditions.push(`uploaded_at <= $${paramCounter}`);
+    values.push(to);
+    paramCounter++;
+  }
+
+  if (search) {
+    conditions.push(`title ILIKE $${paramCounter}`);
+    values.push(`%${search}%`); // ILIKE untuk case-insensitive search
+    paramCounter++;
+  }
+
+  const whereClause = conditions.length > 0 
+    ? `WHERE ${conditions.join(' AND ')}` 
+    : ''; // Jika tidak ada filter, tampilkan semua
+
   const query = `
-    SELECT slug, title, category, link, uploaded_at
+    SELECT slug, title, category, link, status, uploaded_at
     FROM arunglink
-    WHERE category = $1
+    ${whereClause}
     ORDER BY uploaded_at DESC;
   `;
-  const result = await pool.query(query, [category]);
+
+  const result = await pool.query(query, values);
   return result.rows;
 }
+
