@@ -125,7 +125,7 @@ paths:
                     type: integer
                     description: Jumlah total halaman
                     example: 47
-                  items: 
+                  items:
                     type: integer
                     description: Jumlah item per halaman (sama dengan yang di parameter query)
                     example: 10
@@ -249,6 +249,178 @@ paths:
               message:
                 type: string
                 example: "Mahasiswa dengan ID 999 tidak ditemukan"
+        "500":
+          description: Terjadi kesalahan internal server
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: "Terjadi kesalahan internal server"
+              error:
+                type: string
+                example: "Database connection failed"
+  /mahasiswa/tags:
+    get:
+      tags:
+        - mahasiswa
+      summary: Filtering sesuai dengan tags jurusan, interests, dan search mode
+      description: Mengembalikan array berisi semua mahasiswa sesuai tags
+      parameters:
+        - name: tags
+          in: query
+          description: |
+            Tags yang ingin difilter. Bisa berisi jurusan atau interests
+            CASE SENSITIVE
+          required: True
+          schema:
+            type: string
+            example: "Ilmu Komputer"
+        - name: mode
+          in: query
+          description: |
+            Mode pencarian, bisa "and" atau "or". 
+            "and" berarti mahasiswa harus memiliki semua tags yang diberikan,
+            "or" berarti mahasiswa harus memiliki minimal salah satu tags yang diberikan.
+            Note: Jurusan selalu dalam mode "or"
+          required: True
+          schema:
+            type: string
+            enum:
+              - and
+              - or
+            example: or
+        - name: items
+          in: query
+          description: Berapa item (jumlah mahasiswa) yang akan di-load per halaman; opsional, jika kosong defaultnya 10; Maksimum item per halaman adalah 20
+          required: False
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 20
+            default: 10
+            example: 10
+        - name: page
+          in: query
+          description: Halaman dalam pagination (set by user)
+          required: True
+          schema:
+            type: integer
+            minimum: 1
+            example: 1
+      responses:
+        "200":
+          description: Data mahasiswa berhasil ditemukan
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              message:
+                type: string
+                example: "Data mahasiswa berhasil ditemukan"
+              students:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    nama:
+                      type: string
+                      example: "Andi Pratama"
+                    jurusan:
+                      type: string
+                      example: "Ilmu Komputer"
+                    ttl:
+                      type: string
+                      description: Tempat tanggal lahir mahasiswa
+                      example: "2001-03-15T00:00:00.000Z"
+                    sosmed:
+                      type: array
+                      description: Daftar akun media sosial mahasiswa
+                      items:
+                        type: object
+                        properties:
+                          data:
+                            type: string
+                            description: Username atau link (sesuai sosmed)
+                          type:
+                            type: string
+                            description: Jenis sosmed
+                      example:
+                        - data: "andi_ig"
+                          type: "instagram"
+                        - data: "https://linkedin.com/in/andi"
+                          type: "linkedin"
+                    description:
+                      type: string
+                      description: Bio/Deskripsi mahasiswa
+                      example: "Suka belajar AI."
+                    message:
+                      type: string
+                      description: Pesan pribadi dari mahasiswa
+                      example: "Halo semua!"
+                    interests:
+                      type: array
+                      description: Daftar interest mahasiswa
+                      items:
+                        type: string
+                      example:
+                        - "AI"
+                        - "Coding"
+                        - "Gaming"
+                    avatar:
+                      type: string
+                      description: Nama file avatar/profile picture mahasiswa
+                      example: "c813ae6a-dcd2-416d-9907-5849deb3bd5d"
+              meta:
+                type: object
+                description: Data mengenai pagination
+                properties:
+                  total:
+                    type: integer
+                    description: Jumlah total mahasiswa
+                    example: 462
+                  totalPages:
+                    type: integer
+                    description: Jumlah total halaman
+                    example: 47
+                  items:
+                    type: integer
+                    description: Jumlah item per halaman (sama dengan yang di parameter query)
+                    example: 10
+                  page:
+                    type: integer
+                    description: Halaman sekarang (sama dengan yang di parameter query)
+                    example: 4
+        "400":
+          description: Bentuk query tidak valid
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: "Query tags malformed"
+        "404":
+          description: Tidak ada mahasiswa dengan tags tersebut
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: "Tidak ada mahasiswa dengan tags tersebut"
         "500":
           description: Terjadi kesalahan internal server
           schema:
