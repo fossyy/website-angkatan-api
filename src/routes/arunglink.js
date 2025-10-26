@@ -1,5 +1,9 @@
 import { Router } from 'express';      
+<<<<<<< HEAD
 import { getAllLinks, getLinkBySlug, getFilteredLinks,} from '../lib/arunglink.js';
+=======
+import { getAllLinks, getLinkBySlug, getFilteredLinks} from '../lib/arunglink.js';
+>>>>>>> feat/fayyad
 
 const router = Router();
 
