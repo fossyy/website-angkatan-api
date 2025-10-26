@@ -24,11 +24,13 @@ router.get("/tags", async (req, res) => {
       })
     }
 
-    const parsedTags = Array.isArray(tags) ? tags.map(t => t.trim()) : [tags.trim()];
+    const parsedTags = Array.isArray(tags)
+      ? tags.map(t => String(t).trim()).filter(Boolean)
+      : String(tags).split(",").map(t => t.trim()).filter(Boolean);
 
     const jurusanTags = parsedTags.filter(t => jurusanList.has(t));
     const interestsTags = parsedTags.filter(t => !jurusanList.has(t));
-    const searchMode = (mode && mode.toLowerCase() === "and") ? "and" : "or";
+    const searchMode = (mode && mode.toLowerCase() === "or") ? "or" : "and";
 
     const students = await getStudentByTags(jurusanTags, interestsTags, searchMode, items, page);
 
