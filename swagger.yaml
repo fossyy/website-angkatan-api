@@ -473,6 +473,10 @@ paths:
                       type: string
                       format: uri
                       example: "https://academic.ui.ac.id"
+                    status:
+                      type: string
+                      enum: [new, on, none]
+                      example: "none"
                     uploaded_at:
                       type: string
                       format: date-time
@@ -528,6 +532,10 @@ paths:
                     type: string
                     format: uri
                     example: "https://academic.ui.ac.id"
+                  status:
+                    type: string
+                    enum: [new, on, none]
+                    example: "none"
                   uploaded_at:
                     type: string
                     format: date-time
@@ -555,29 +563,69 @@ paths:
                 type: string
                 example: "Failed to fetch arunglink data"
 
-  /arunglink/category/{category}:
+  /arunglink/filter:
     get:
       tags:
         - arunglink
-      summary: Mendapatkan link berdasarkan kategori
-      description: Mengembalikan array link yang sesuai dengan kategori tertentu
+      summary: Filter arunglink dengan berbagai kriteria
+      description: Mengembalikan array link berdasarkan filter yang diberikan (category, tanggal, dan keyword). Semua parameter opsional dan bisa dikombinasikan.
       parameters:
         - name: category
-          in: path
-          description: Kategori link (academic, administration, organization, event)
-          required: true
+          in: query
+          description: Filter berdasarkan kategori (academic, administration, organization, event)
+          required: false
           type: string
           enum: [academic, administration, organization, event]
           example: "academic"
+        - name: from
+          in: query
+          description: Filter tanggal mulai (format YYYY-MM-DD)
+          required: false
+          type: string
+          format: date
+          example: "2025-01-10"
+        - name: to
+          in: query
+          description: Filter tanggal akhir (format YYYY-MM-DD)
+          required: false
+          type: string
+          format: date
+          example: "2025-02-10"
+        - name: search
+          in: query
+          description: Cari keyword di title (case-insensitive)
+          required: false
+          type: string
+          example: "pmb"
       responses:
         "200":
-          description: Berhasil mengambil link berdasarkan kategori
+          description: Berhasil mengambil link berdasarkan filter
           schema:
             type: object
             properties:
               success:
                 type: boolean
                 example: true
+              filters:
+                type: object
+                description: Filter yang digunakan
+                properties:
+                  category:
+                    type: string
+                    example: "academic"
+                  from:
+                    type: string
+                    example: "2025-01-10"
+                  to:
+                    type: string
+                    example: "2025-02-10"
+                  search:
+                    type: string
+                    example: "pmb"
+              count:
+                type: integer
+                description: Jumlah hasil yang ditemukan
+                example: 3
               data:
                 type: array
                 items:
@@ -585,17 +633,21 @@ paths:
                   properties:
                     slug:
                       type: string
-                      example: "portal-akademik-ui"
+                      example: "pmb-fasilkom-ui"
                     title:
                       type: string
-                      example: "Portal Akademik UI"
+                      example: "PMB Fasilkom UI"
                     category:
                       type: string
                       example: "academic"
                     link:
                       type: string
                       format: uri
-                      example: "https://academic.ui.ac.id"
+                      example: "https://pmb.cs.ui.ac.id"
+                    status:
+                      type: string
+                      enum: [new, on, none]
+                      example: "new"
                     uploaded_at:
                       type: string
                       format: date-time
@@ -610,7 +662,10 @@ paths:
                 example: false
               message:
                 type: string
-                example: "Failed to fetch arunglink data by category"
+                example: "Failed to filter arunglink data"
+              error:
+                type: string
+                example: "Database error"
   /gallery:
     get:
       tags:
