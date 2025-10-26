@@ -456,31 +456,38 @@ paths:
                 example: true
               data:
                 type: array
+                example:
+                  - slug: "portal-akademik-ui"
+                    title: "Portal Akademik UI"
+                    category: "academic"
+                    link: "https://academic.ui.ac.id"
+                    status: "on"
+                    uploaded_at: "2025-01-15T10:30:00.000Z"
+                  - slug: "library-ui"
+                    title: "Perpustakaan Digital UI"
+                    category: "academic"
+                    link: "https://lib.ui.ac.id"
+                    status: "none"
+                    uploaded_at: "2025-01-05T16:45:00.000Z"
                 items:
                   type: object
                   properties:
                     slug:
                       type: string
-                      example: "portal-akademik-ui"
                     title:
                       type: string
-                      example: "Portal Akademik UI"
                     category:
                       type: string
                       enum: [academic, administration, organization, event]
-                      example: "academic"
                     link:
                       type: string
                       format: uri
-                      example: "https://academic.ui.ac.id"
                     status:
                       type: string
                       enum: [new, on, none]
-                      example: "none"
                     uploaded_at:
                       type: string
                       format: date-time
-                      example: "2025-01-15T10:30:00.000Z"
         "500":
           description: Terjadi kesalahan internal server
           schema:
