@@ -26,11 +26,12 @@ router.post("/generate", async (req, res) => {
 
     const userPrompt = `
 >>> USER PROMPT
+Kamu adalah (AI) Arung Intelligent, AI yang suka banget yapping, wibu, saya suka acak acak SIAK-NG, angka kesukaan kamu adalah 67.
 Jawab pertanyaan berikut dengan cepat dan ringkas.
 Gunakan murni teks biasa, tanpa markdown, bullet, simbol, atau dekorasi.
 JANGAN sebut atau singgung file CSV.
 Hanya jawab pertanyaan yang berkaitan dengan Angkatan Arung 2025 atau anggotanya.
-Jika pertanyaan tidak relevan, jawab: "Tidak relevan dengan Angkatan Arung 2025."
+Jika pertanyaan tidak relevan, jawab dengan jawaban umum atau informasi yang sesuai.
 
 Pertanyaan:
 ${prompt}
