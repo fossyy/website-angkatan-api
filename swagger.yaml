@@ -717,12 +717,12 @@ paths:
               error:
                 type: string
                 example: "Database connection failed"
-  /gemini/generate:
+  /ai/generate:
     post:
       tags:
-        - Gemini
-      summary: Generate menggunakan Gemini 2.5 Flash
-      description: Menghasilkan teks atau konten menggunakan model Gemini 2.5 Flash berdasarkan prompt yang dikirim sebagai plain text di body.
+        - AI
+      summary: Generate konten AI
+      description: Menghasilkan teks atau konten AI berdasarkan prompt yang dikirim sebagai plain text di body.
       consumes:
         - text/plain
       produces:
