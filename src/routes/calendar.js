@@ -42,12 +42,12 @@ router.get("/:year/:month", async (req, res) => {
   try {
     const events = await getEvents(parsedYear, parsedMonth)
 
-    // TODO: sesuaikan (ini cuman perlu tanggal dan nama)
     const filteredEvents = events.map(event => ({
           id: event.id,
           summary: event.summary,
-          start: event.start,
-          end: event.end,
+          description: event.description,
+          start: event.start.dateTime,
+          end: event.end.dateTime,
           location: event.location,
           status: event.status,
         }));
@@ -94,7 +94,6 @@ router.get("/:year/:month/:date", async (req, res) => {
   try {
     const events = await getEvents(parsedYear, parsedMonth, parsedDate)
 
-    // TODO: sesuaikan (ini perlu deskripsi)
     const filteredEvents = events.map(event => ({
           id: event.id,
           summary: event.summary,
