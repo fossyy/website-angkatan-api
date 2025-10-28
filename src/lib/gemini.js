@@ -23,7 +23,7 @@ export const getModel = (modelName = "gemini-2.5-flash") => {
 export const generateContent = async (prompt, modelName = "gemini-2.5-flash") => {
   try {
     const model = getModel(modelName);
-    const fileBuffer = fs.readFileSync("./final.csv");
+    const fileBuffer = fs.readFileSync("./mahasiswa.csv");
       const userPrompt = `
 >>> USER PROMPT
 Jawab pertanyaan berikut dengan cepat dan ringkas.
