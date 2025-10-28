@@ -4,6 +4,7 @@ import mahasiswaRoutes from "./routes/mahasiswa.js";
 import galleryRoute from "./routes/gallery.js"
 import arunglinkRoute from "./routes/arunglink.js";
 import swaggerUi from "swagger-ui-express";
+import geminiRoutes from "./routes/gemini.js"
 import YAML from "yaml";
 import fs from "fs";
 import dotenv from "dotenv";
@@ -23,6 +24,8 @@ dotenv.config();
 
 app.use(corsConfig);
 app.use(logger);
+app.use(express.text());
+app.use(express.urlencoded({ extended: true }));
 
 app.use("/", indexRoutes);
 app.use("/mahasiswa", mahasiswaRoutes);
@@ -30,6 +33,7 @@ app.use("/api-docs", swaggerUi.serve);
 app.get("/api-docs", swaggerUi.setup(swaggerDocument));
 app.get("/gallery", galleryRoute)
 app.use("/arunglink", arunglinkRoute);
+app.use("/gemini", geminiRoutes);
 app.use((req, res) => {
   res.status(404).json({ error: "Not Found" });
 });
