@@ -22,13 +22,18 @@ export async function getCalendarClient() {
   }
 }
 
-export async function getEventsPerMonth(year, month, calendarId = CALENDAR_ID) {
+export async function getEvents(year, month, date = 0, calendarId = CALENDAR_ID) {
   try {
     const calendar = await getCalendarClient()
 
-    const startDate = new Date(Date.UTC(year, month - 1, 1))
-    const endDate = new Date(Date.UTC(year, month, 1))
+    const startDate = date
+    ? new Date(Date.UTC(year, month - 1, date))
+    : new Date(Date.UTC(year, month - 1, 1));
 
+    const endDate = date
+      ? new Date(Date.UTC(year, month - 1, date + 1))
+      : new Date(Date.UTC(year, month, 1));
+    
     const response = await calendar.events.list({
       calendarId: calendarId,
       timeMin: startDate.toISOString(),
@@ -37,13 +42,10 @@ export async function getEventsPerMonth(year, month, calendarId = CALENDAR_ID) {
       orderBy: 'startTime'
     })
 
-    return {
-      data: response.data.items,
-
-    }
+    return response.data.items
 
   } catch (e) {
-    console.error('Error fetching monthly events:', e)
+    console.error('Error fetching events:', e)
     throw e
   }
 }
