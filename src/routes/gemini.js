@@ -12,8 +12,8 @@ const router = Router();
 
 router.post("/generate", async (req, res) => {
   try {
-    const { prompt } = req.body;
-
+    const prompt = req.body;
+    console.log(prompt)
     if (!prompt || typeof prompt !== "string" || prompt.trim() === "") {
       return res.status(400).json({
         success: false,
@@ -21,7 +21,7 @@ router.post("/generate", async (req, res) => {
       });
     }
 
-    const csvFilePath = path.join(__dirname, "../data/data.csv");
+    const csvFilePath = path.join("mahasiswa.csv");
     const csvData = fs.readFileSync(csvFilePath, "utf-8");
 
     const userPrompt = `
@@ -40,7 +40,7 @@ ${csvData}
 `;
 
     const completion = await openai.chat.completions.create({
-      model: "openai/gpt-4o",
+      model: "minimax/minimax-m2:free",
       messages: [
         {
           role: "user",
@@ -51,7 +51,9 @@ ${csvData}
 
     res.json({
       success: true,
-      data: completion.choices[0].message.content,
+      data: {
+        response: completion.choices[0].message.content,
+      }
     });
   } catch (error) {
     console.error("Error di /generate:", error);
