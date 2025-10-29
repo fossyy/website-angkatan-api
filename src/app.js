@@ -14,8 +14,6 @@ import { corsConfig } from "./middlewares/cors.js";
 
 import { startBot } from "./lib/bot/main.js";
 
-startBot(process.env.BOT_TOKEN, process.env.CLIENT_ID, "857864100973379584")
-
 const app = express();
 const file = fs.readFileSync("swagger.yaml", "utf8");
 const swaggerDocument = YAML.parse(file);
@@ -28,11 +26,16 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use("/mahasiswa", mahasiswaRoutes);
-app.use("/api-docs", swaggerUi.serve);
-app.get("/api-docs", swaggerUi.setup(swaggerDocument));
 app.get("/gallery", galleryRoute)
 app.use("/arunglink", arunglinkRoute);
 app.use("/ai", aiRoutes);
+
+if (process.env.NODE_ENV === "deployment") {
+  startBot(process.env.DISCORD_BOT_TOKEN, process.env.DISCORD_CLIENT_ID, process.env.DISCORD_GUILD_ID)
+  app.use("/api-docs", swaggerUi.serve);
+  app.get("/api-docs", swaggerUi.setup(swaggerDocument));
+}
+
 app.use((req, res) => {
   res.status(404).json({ error: "Not Found" });
 });
