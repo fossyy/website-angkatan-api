@@ -772,3 +772,77 @@ paths:
               error:
                 type: string
                 example: "Internal server error"
+  /mahasiswa/message:
+    post:
+      tags:
+        - Message
+      summary: Kirim pesan untuk mahasiswa
+      description: Menambahkan pesan baru yang dikaitkan dengan mahasiswa tertentu.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          description: Data pesan yang akan dikirim
+          schema:
+            type: object
+            required:
+              - mahasiswa_id
+              - content
+            properties:
+              mahasiswa_id:
+                type: integer
+                example: 2
+              content:
+                type: string
+                example: "Selamat datang di Arung 2025!"
+      responses:
+        "201":
+          description: Pesan berhasil dibuat
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              data:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 10
+                  mahasiswa_id:
+                    type: integer
+                    example: 2
+                  content:
+                    type: string
+                    example: "Selamat datang di Arung 2025!"
+                  created_at:
+                    type: string
+                    format: date-time
+                    example: "2025-10-26T13:45:00.512Z"
+        "400":
+          description: Permintaan tidak valid
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              error:
+                type: string
+                example: "mahasiswa_id dan content wajib diisi"
+        "500":
+          description: Terjadi kesalahan internal server
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              error:
+                type: string
+                example: "Internal server error"

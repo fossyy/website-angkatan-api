@@ -26,6 +26,7 @@ app.use(corsConfig);
 app.use(logger);
 app.use(express.text());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 app.use("/", indexRoutes);
 app.use("/mahasiswa", mahasiswaRoutes);

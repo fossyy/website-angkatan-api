@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getStudents, getStudentById, getStudentByTags } from "../lib/students.js";
+import { getStudents, getStudentById, getStudentByTags, insertMessage } from "../lib/students.js";
 
 const router = Router();
 
@@ -79,12 +79,30 @@ router.get("/:id", async (req, res) => {
         message: `Mahasiswa dengan ID ${id} tidak ditemukan`,
       });
     }
-
+    console.log(student)
     // Return data mahasiswa
     res.status(200).json({
       success: true,
       message: "Data mahasiswa berhasil ditemukan",
-      data: student[0], // Ambil data pertama karena getStudentById return array
+      data: student, // Ambil data pertama karena getStudentById return array
+    });
+  } catch (error) {
+    console.error("Error getting student by ID:", error);
+    res.status(500).json({
+      success: false,
+      message: "Terjadi kesalahan internal server",
+      error: process.env.NODE_ENV === "development" ? error.message : undefined,
+    });
+  }
+});
+
+router.post("/message", async (req, res) => {
+  try {
+    const data = await insertMessage(req.body.mahasiswa_id, req.body.content)
+    res.status(200).json({
+      success: true,
+      message: "Data mahasiswa berhasil ditemukan",
+      data: data,
     });
   } catch (error) {
     console.error("Error getting student by ID:", error);

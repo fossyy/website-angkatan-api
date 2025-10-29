@@ -47,8 +47,52 @@ export async function getStudentById(id) {
     throw new Error("id must be a positive integer");
 
   try {
-    const res = await pool.query(`SELECT * FROM ${tableName} WHERE id = $1`, [parsedId]);
-    return res.rows;
+const query = `
+      SELECT 
+        m.id AS mahasiswa_id,
+        m.nama,
+        m.panggilan,
+        m.jurusan,
+        m.birthdate,
+        m.sosmed,
+        m.description,
+        m.message,
+        m.interests,
+        m.avatar,
+        msg.id AS comment_id,
+        msg.content AS comment_content,
+        msg.created_at AS comment_created_at
+      FROM mahasiswa m
+      LEFT JOIN message msg ON msg.mahasiswa_id = m.id
+      WHERE m.id = $1
+      ORDER BY msg.created_at DESC;
+    `;
+
+    const { rows } = await pool.query(query, [parsedId]);
+
+    if (rows.length === 0) return null;
+
+    const mahasiswa = {
+      id: rows[0].mahasiswa_id,
+      nama: rows[0].nama,
+      panggilan: rows[0].panggilan,
+      jurusan: rows[0].jurusan,
+      birthdate: rows[0].birthdate,
+      sosmed: rows[0].sosmed || {},
+      description: rows[0].description,
+      message: rows[0].message,
+      interests: rows[0].interests || [],
+      avatar: rows[0].avatar,
+      comments: rows
+        .filter(r => r.comment_id)
+        .map(r => ({
+          id: r.comment_id,
+          content: r.comment_content,
+          created_at: r.comment_created_at,
+        })),
+    };
+
+    return mahasiswa;
   } catch (e) {
     console.error(`Failed getting student by id: ${parsedId}`);
     throw e;
@@ -126,4 +170,16 @@ export async function getStudentByTags(jurusanTags, interestsTags, searchMode = 
     console.error(`Failed getting student by tags: jurusan=${jurusanTags}, interests=${interestsTags}`, e);
     throw e;
   }
+}
+
+export async function insertMessage(mahasiswaId, content) {
+  const query = `
+    INSERT INTO message (mahasiswa_id, content)
+    VALUES ($1, $2)
+    RETURNING id, mahasiswa_id, content, created_at;
+  `;
+  const values = [mahasiswaId, content];
+
+  const { rows } = await pool.query(query, values);
+  return rows[0];
 }
