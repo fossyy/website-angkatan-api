@@ -79,12 +79,10 @@ router.get("/:id", async (req, res) => {
         message: `Mahasiswa dengan ID ${id} tidak ditemukan`,
       });
     }
-    console.log(student)
-    // Return data mahasiswa
     res.status(200).json({
       success: true,
       message: "Data mahasiswa berhasil ditemukan",
-      data: student, // Ambil data pertama karena getStudentById return array
+      data: student,
     });
   } catch (error) {
     console.error("Error getting student by ID:", error);
