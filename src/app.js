@@ -1,5 +1,4 @@
 import express from "express";
-import indexRoutes from "./routes/index.js";
 import mahasiswaRoutes from "./routes/mahasiswa.js";
 import galleryRoute from "./routes/gallery.js"
 import arunglinkRoute from "./routes/arunglink.js";
@@ -27,7 +26,7 @@ app.use(logger);
 app.use(express.text());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use("/", indexRoutes);
+
 app.use("/mahasiswa", mahasiswaRoutes);
 app.use("/api-docs", swaggerUi.serve);
 app.get("/api-docs", swaggerUi.setup(swaggerDocument));
