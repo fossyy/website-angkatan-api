@@ -42,20 +42,10 @@ router.get("/:year/:month", async (req, res) => {
   try {
     const events = await getEvents(parsedYear, parsedMonth)
 
-    const filteredEvents = events.map(event => ({
-          id: event.id,
-          summary: event.summary,
-          description: event.description,
-          start: event.start.dateTime,
-          end: event.end.dateTime,
-          location: event.location,
-          status: event.status,
-        }));
-
     return res.status(200).json({
         success: true,
         message: "Berhasil mendapatkan data events",
-        data: filteredEvents,
+        data: events,
       });
   } catch (e) {
     res.status(500).json({
@@ -94,20 +84,10 @@ router.get("/:year/:month/:date", async (req, res) => {
   try {
     const events = await getEvents(parsedYear, parsedMonth, parsedDate)
 
-    const filteredEvents = events.map(event => ({
-          id: event.id,
-          summary: event.summary,
-          description: event.description,
-          start: event.start.dateTime,
-          end: event.end.dateTime,
-          location: event.location,
-          status: event.status,
-        }));
-
     return res.status(200).json({
         success: true,
         message: "Berhasil mendapatkan data events",
-        data: filteredEvents,
+        data: events,
       });
   } catch (e) {
     res.status(500).json({

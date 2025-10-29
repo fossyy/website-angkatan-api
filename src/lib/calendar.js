@@ -3,8 +3,13 @@ import { google } from "googleapis";
 
 const SCOPES = ['https://www.googleapis.com/auth/calendar.readonly'];
 // TODO: fix pengambilan dari .env (pake json udah bener)
-const CREDENTIALS = path.join(process.cwd(), 'calendar-project-476015.json')
-const CALENDAR_ID = process.env.CALENDAR_ID
+const CREDENTIALS = path.join(process.cwd(), 'calendar-credentials.json')
+const CALENDAR_IDS = {
+  'Event Pacil': process.env.EVENT_PACIL_ID,
+  'Event UI': process.env.EVENT_UI_ID,
+  'Timeline PMB': process.env.TIMELINE_PMB_ID,
+  'Birthday Pacil': process.env.BDAY_PACIL_ID,
+}
 
 export async function getCalendarClient() {
   try {
@@ -22,7 +27,7 @@ export async function getCalendarClient() {
   }
 }
 
-export async function getEvents(year, month, date = 0, calendarId = CALENDAR_ID) {
+export async function getEvents(year, month, date = 0) {
   try {
     const calendar = await getCalendarClient()
 
@@ -34,16 +39,42 @@ export async function getEvents(year, month, date = 0, calendarId = CALENDAR_ID)
       ? new Date(Date.UTC(year, month - 1, date + 1))
       : new Date(Date.UTC(year, month, 1));
     
-    const response = await calendar.events.list({
-      calendarId: calendarId,
-      timeMin: startDate.toISOString(),
-      timeMax: endDate.toISOString(),
-      singleEvents: true,
-      orderBy: 'startTime'
-    })
+    const allEvents = await Promise.all(
+      Object.entries(CALENDAR_IDS).map(async ([key, calendarId]) => {
+        const response = await calendar.events.list({
+          calendarId: calendarId,
+          timeMin: startDate.toISOString(),
+          timeMax: endDate.toISOString(),
+          singleEvents: true,
+          orderBy: 'startTime',
+          fields: 'items(id,summary,description,start,end,location)'
+        });
+        
+        return response.data.items.map(event => ({
+          id: event.id || "",
+          event_type: key,
+          summary: event.summary || "",
+          description: event.description || "",
+          start: event.start.dateTime || "",
+          end: event.end.dateTime || "",
+          location: event.location || "",
+          startDate: event.start.dateTime ? 
+            event.start.dateTime.split('T')[0] : 
+            event.start.date || ""
+        }));
+      })
+    ).then(responses => responses.flat());
 
-    return response.data.items
+    const eventsByDate = allEvents.reduce((groups, event) => {
+      const date = event.startDate;
+      if (!groups[date]) {
+        groups[date] = [];
+      }
+      groups[date].push(event);
+      return groups;
+    }, {});
 
+    return eventsByDate
   } catch (e) {
     console.error('Error fetching events:', e)
     throw e
