@@ -775,7 +775,7 @@ paths:
   /mahasiswa/message:
     post:
       tags:
-        - Message
+        - mahasiswa
       summary: Kirim pesan untuk mahasiswa
       description: Menambahkan pesan baru yang dikaitkan dengan mahasiswa tertentu.
       consumes:
