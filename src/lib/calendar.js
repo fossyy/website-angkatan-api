@@ -2,8 +2,19 @@ import path from 'node:path';
 import { google } from "googleapis";
 
 const SCOPES = ['https://www.googleapis.com/auth/calendar.readonly'];
-// TODO: fix pengambilan dari .env (pake json udah bener)
-const CREDENTIALS = path.join(process.cwd(), 'calendar-credentials.json')
+const CREDENTIALS = {
+  type: 'service_account',
+  project_id: process.env.CALENDAR_PROJECT_ID,
+  private_key_id: process.env.CALENDAR_PRIVATE_KEY_ID,
+  private_key: process.env.CALENDAR_PRIVATE_KEY,
+  client_email: process.env.CALENDAR_CLIENT_EMAIL,
+  client_id: process.env.CALENDAR_CLIENT_ID,
+  auth_uri: 'https://accounts.google.com/o/oauth2/auth',
+  token_uri: 'https://oauth2.googleapis.com/token',
+  auth_provider_x509_cert_url: 'https://www.googleapis.com/oauth2/v1/certs',
+  client_x509_cert_url: process.env.CALENDAR_CLIENT_X509_CERT_URL,
+  universe_domain: 'googleapis.com',
+}
 const CALENDAR_IDS = {
   'Event Pacil': process.env.EVENT_PACIL_ID,
   'Event UI': process.env.EVENT_UI_ID,
@@ -14,9 +25,7 @@ const CALENDAR_IDS = {
 export async function getCalendarClient() {
   try {
     const auth = new google.auth.GoogleAuth({
-      keyFilename: CREDENTIALS,
-      // email: process.env.CALENDAR_CLIENT_EMAIL,
-      // key: process.env.CALENDAR_PRIVATE_KEY,
+      credentials: CREDENTIALS,
       scopes: SCOPES,
     });
       
