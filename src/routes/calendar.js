@@ -42,10 +42,20 @@ router.get("/:year/:month", async (req, res) => {
   try {
     const events = await getEvents(parsedYear, parsedMonth)
 
+    // Grouping per tanggal
+    const eventsByDate = events.reduce((groups, event) => {
+      const date = event.startDate;
+      if (!groups[date]) {
+        groups[date] = [];
+      }
+      groups[date].push(event);
+      return groups;
+    }, {});
+
     return res.status(200).json({
         success: true,
         message: "Berhasil mendapatkan data events",
-        data: events,
+        data: eventsByDate,
       });
   } catch (e) {
     res.status(500).json({

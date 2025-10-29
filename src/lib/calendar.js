@@ -65,16 +65,7 @@ export async function getEvents(year, month, date = 0) {
       })
     ).then(responses => responses.flat());
 
-    const eventsByDate = allEvents.reduce((groups, event) => {
-      const date = event.startDate;
-      if (!groups[date]) {
-        groups[date] = [];
-      }
-      groups[date].push(event);
-      return groups;
-    }, {});
-
-    return eventsByDate
+    return allEvents
   } catch (e) {
     console.error('Error fetching events:', e)
     throw e
