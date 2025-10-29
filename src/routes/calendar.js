@@ -66,7 +66,6 @@ router.get("/:year/:month", async (req, res) => {
   }
 });
 
-// TODO: ...disatuin gak ya
 // list event-event di tanggal yang dipilih
 router.get("/:year/:month/:date", async (req, res) => {
   const { year, month, date } = req.params
