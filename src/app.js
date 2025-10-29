@@ -30,7 +30,7 @@ app.get("/gallery", galleryRoute)
 app.use("/arunglink", arunglinkRoute);
 app.use("/ai", aiRoutes);
 
-if (process.env.NODE_ENV === "deployment") {
+if (process.env.NODE_ENV !== "deployment") {
   startBot(process.env.DISCORD_BOT_TOKEN, process.env.DISCORD_CLIENT_ID, process.env.DISCORD_GUILD_ID)
   app.use("/api-docs", swaggerUi.serve);
   app.get("/api-docs", swaggerUi.setup(swaggerDocument));
