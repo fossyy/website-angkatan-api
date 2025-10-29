@@ -11,6 +11,7 @@ import dotenv from "dotenv";
 import { logger } from "./middlewares/logger.js";
 import { errorHandler } from "./middlewares/error.js";
 import { corsConfig } from "./middlewares/cors.js";
+import { restrictInProd } from "./middlewares/prod.js";
 
 import { startBot } from "./lib/bot/main.js";
 
@@ -29,17 +30,14 @@ app.use("/mahasiswa", mahasiswaRoutes);
 app.get("/gallery", galleryRoute)
 app.use("/arunglink", arunglinkRoute);
 app.use("/ai", aiRoutes);
-
-if (process.env.NODE_ENV !== "deployment") {
-  startBot(process.env.DISCORD_BOT_TOKEN, process.env.DISCORD_CLIENT_ID, process.env.DISCORD_GUILD_ID)
-  app.use("/api-docs", swaggerUi.serve);
-  app.get("/api-docs", swaggerUi.setup(swaggerDocument));
-}
+app.use("/api-docs", restrictInProd, swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use((req, res) => {
   res.status(404).json({ error: "Not Found" });
 });
 
 app.use(errorHandler);
+
+startBot(process.env.DISCORD_BOT_TOKEN, process.env.DISCORD_CLIENT_ID, process.env.DISCORD_GUILD_ID)
 
 export default app;
