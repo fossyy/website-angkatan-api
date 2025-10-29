@@ -233,8 +233,8 @@ paths:
     get:
       tags:
         - calendar
-      summary: Mengambil event-event per bulan (dalam tahun yang ditentukan) untuk setiap halaman kalender
-      description: "Return data untuk events (bentuk: multiple objects)"
+      summary: Mengambil event-event per bulan (dalam tahun yang ditentukan). Untuk setiap halaman kalender
+      description: "Return object dengan tanggal sebagai key, masing-masing berisi array data-data event (dalam bentuk object)"
       parameters:
         - name: year
           in: path
@@ -266,35 +266,43 @@ paths:
                 type: string
                 example: "Berhasil mendapatkan data events"
               data:
-                type: array
+                type: object
                 description: Data events yang muncul (udah dipangkas dari query aslinya, kalo perlu sesuatu lagi kontak backend ^^)
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                      description: ID event (id di google calendar)
-                      example: 5ea9281673c04230991ea3e9c935a565
-                    summary:
-                      type: string
-                      description: Judul event
-                      example: Timbil OSUI
-                    start:
+                properties:
+                  2025-10-31:
+                    type: array
+                    description: (Tanggal yang muncul di sini akan sesuai dengan hasil)
+                    items:
                       type: object
-                      description: Tanggal mulai event 
-                      example: 2025-10-31T17:00:00+07:00
-                    end:
-                      type: string
-                      description: Tanggal akhir event
-                      example: 2025-10-31T19:30:00+07:00
-                    location:
-                      type: string
-                      description: Lokasi event (berdasarkan tulisan yg muncul di google calendar-nya)
-                      example: AEON Mall Tanjung Barat, Jl. Raya Tj. Barat No.163, RT.12/RW.4, Tj. Bar., Kec. Jagakarsa, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12530, Indonesia
-                    status:
-                      type: string
-                      description: Status event (perlu gak?)
-                      example: confirmed
+                      properties:
+                        id:
+                          type: string
+                          description: ID event (id di google calendar)
+                          example: 5ea9281673c04230991ea3e9c935a565
+                        event_type:
+                          type: string
+                          description: Jenis event (Event Pacil, Event UI, Timeline PMB, Birthday Pacil)
+                          example: Event Pacil
+                        summary:
+                          type: string
+                          description: Judul event
+                          example: jalan jalan
+                        description:
+                          type: string
+                          description: Deskripsi event
+                          example: (deskripsi)
+                        start:
+                          type: string
+                          description: Tanggal mulai event 
+                          example: 2025-10-31T17:00:00+07:00
+                        end:
+                          type: string
+                          description: Tanggal akhir event
+                          example: 2025-10-31T19:30:00+07:00
+                        location:
+                          type: string
+                          description: Lokasi event (berdasarkan tulisan yg muncul di google calendar-nya)
+                          example: AEON Mall Tanjung Barat, Jl. Raya Tj. Barat No.163, RT.12/RW.4, Tj. Bar., Kec. Jagakarsa, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12530, Indonesia
         "400":
           description: Parameter tidak sesuai
           schema:
@@ -324,8 +332,8 @@ paths:
     get:
       tags:
         - calendar
-      summary: Mengambil event-event per tanggal yang dipilih (format sama persis sama query yg per bulan)
-      description: "Return data untuk events (bentuk: multiple objects)"
+      summary: Mengambil event-event per tanggal yang dipilih
+      description: "Return array berisi data-data event (dalam bentuk object)"
       parameters:
         - name: year
           in: path
@@ -363,15 +371,19 @@ paths:
                   type: object
                   properties:
                     id:
-                      type: integer
+                      type: string
                       description: ID event (id di google calendar)
                       example: 5ea9281673c04230991ea3e9c935a565
+                    event_type:
+                      type: string
+                      description: Jenis event (Event Pacil, Event UI, Timeline PMB, Birthday Pacil)
+                      example: Event Pacil
                     summary:
                       type: string
                       description: Judul event
-                      example: Timbil OSUI kel. Andante
+                      example: jalan jalan
                     start:
-                      type: object
+                      type: string
                       description: Tanggal mulai event 
                       example: 2025-10-31T17:00:00+07:00
                     end:
@@ -382,10 +394,6 @@ paths:
                       type: string
                       description: Lokasi event (berdasarkan tulisan yg muncul di google calendar-nya)
                       example: AEON Mall Tanjung Barat, Jl. Raya Tj. Barat No.163, RT.12/RW.4, Tj. Bar., Kec. Jagakarsa, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12530, Indonesia
-                    status:
-                      type: string
-                      description: Status event (perlu gak?)
-                      example: confirmed
         "400":
           description: Parameter tidak sesuai
           schema:
