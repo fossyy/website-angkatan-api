@@ -2,6 +2,7 @@ import express from "express";
 import mahasiswaRoutes from "./routes/mahasiswa.js";
 import galleryRoute from "./routes/gallery.js"
 import arunglinkRoute from "./routes/arunglink.js";
+import calendarRoutes from "./routes/calendar.js";
 import swaggerUi from "swagger-ui-express";
 import aiRoutes from "./routes/ai.js"
 import YAML from "yaml";
@@ -30,6 +31,7 @@ app.use("/mahasiswa", mahasiswaRoutes);
 app.get("/gallery", galleryRoute)
 app.use("/arunglink", arunglinkRoute);
 app.use("/ai", aiRoutes);
+app.use("/calendar", calendarRoutes);
 app.use("/api-docs", restrictInProd, swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use((req, res) => {

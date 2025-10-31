@@ -8,6 +8,8 @@ tags:
   - name: index
   - name: mahasiswa
     description: Semua hal berkaitan dengan menu mahasiswa (list, mahasiswa by id...)
+  - name: calendar
+    description: Query data events untuk kalender acara pacil/UI/dll
   - name: arunglink
     description: Semua hal berkaitan dengan arunglink (list link, link by id, link by category...)
   - name: images
@@ -853,3 +855,193 @@ paths:
               error:
                 type: string
                 example: "Internal server error"
+  /calendar/{year}/{month}:
+    get:
+      tags:
+        - calendar
+      summary: Mengambil event-event per bulan (dalam tahun yang ditentukan). Untuk setiap halaman kalender
+      description: "Return object dengan tanggal sebagai key, masing-masing berisi array data-data event (dalam bentuk object)"
+      parameters:
+        - name: year
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+          description: Year (positive integer)
+          example: 2025
+        - name: month
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 12
+          description: Month (1-12)
+          example: 8
+      responses:
+        "200":
+          description: Berhasil melakukan query; return JSON array
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              message:
+                type: string
+                example: "Berhasil mendapatkan data events"
+              data:
+                type: object
+                description: Data events yang muncul (udah dipangkas dari query aslinya, kalo perlu sesuatu lagi kontak backend ^^)
+                properties:
+                  2025-10-31:
+                    type: array
+                    description: (Tanggal yang muncul di sini akan sesuai dengan hasil)
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: ID event (id di google calendar)
+                          example: 5ea9281673c04230991ea3e9c935a565
+                        event_type:
+                          type: string
+                          description: Jenis event (Event Pacil, Event UI, Timeline PMB, Birthday Pacil)
+                          example: Event Pacil
+                        summary:
+                          type: string
+                          description: Judul event
+                          example: jalan jalan
+                        description:
+                          type: string
+                          description: Deskripsi event
+                          example: (deskripsi)
+                        start:
+                          type: string
+                          description: Tanggal mulai event 
+                          example: 2025-10-31T17:00:00+07:00
+                        end:
+                          type: string
+                          description: Tanggal akhir event
+                          example: 2025-10-31T19:30:00+07:00
+                        location:
+                          type: string
+                          description: Lokasi event (berdasarkan tulisan yg muncul di google calendar-nya)
+                          example: AEON Mall Tanjung Barat, Jl. Raya Tj. Barat No.163, RT.12/RW.4, Tj. Bar., Kec. Jagakarsa, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12530, Indonesia
+        "400":
+          description: Parameter tidak sesuai
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: "Bulan harus berupa integer positif"
+        "500":
+          description: Kesalahan internal seperti masalah koneksi dengan Google API
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: "Terjadi kesalahan internal server"
+              error:
+                type: string
+                example: "Error authenticating: (error msg...)"
+  /calendar/{year}/{month}/{date}:
+    get:
+      tags:
+        - calendar
+      summary: Mengambil event-event per tanggal yang dipilih
+      description: "Return array berisi data-data event (dalam bentuk object)"
+      parameters:
+        - name: year
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+          description: Year (positive integer)
+          example: 2025
+        - name: month
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 12
+          description: Month (1-12)
+          example: 8
+      responses:
+        "200":
+          description: Berhasil melakukan query; return JSON array
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              message:
+                type: string
+                example: "Berhasil mendapatkan data events"
+              data:
+                type: array
+                description: Data events yang muncul (udah dipangkas dari query aslinya, kalo perlu sesuatu lagi kontak backend ^^)
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: ID event (id di google calendar)
+                      example: 5ea9281673c04230991ea3e9c935a565
+                    event_type:
+                      type: string
+                      description: Jenis event (Event Pacil, Event UI, Timeline PMB, Birthday Pacil)
+                      example: Event Pacil
+                    summary:
+                      type: string
+                      description: Judul event
+                      example: jalan jalan
+                    start:
+                      type: string
+                      description: Tanggal mulai event 
+                      example: 2025-10-31T17:00:00+07:00
+                    end:
+                      type: string
+                      description: Tanggal akhir event
+                      example: 2025-10-31T19:30:00+07:00
+                    location:
+                      type: string
+                      description: Lokasi event (berdasarkan tulisan yg muncul di google calendar-nya)
+                      example: AEON Mall Tanjung Barat, Jl. Raya Tj. Barat No.163, RT.12/RW.4, Tj. Bar., Kec. Jagakarsa, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12530, Indonesia
+        "400":
+          description: Parameter tidak sesuai
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: "Bulan harus berupa integer positif"
+        "500":
+          description: Kesalahan internal seperti masalah koneksi dengan Google API
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+                example: "Terjadi kesalahan internal server"
+              error:
+                type: string
+                example: "Error authenticating: (error msg...)"
