@@ -4,7 +4,7 @@ import { copyObject, removeObject, uploadNewObject } from '../s3.js';
 import { getImageByID, insertImage, removeImageByID, updateImageLink, updateImageTitle } from '../gallery.js';
 import { insertArunglink, removeArungLinkBySlug } from '../arunglink.js';
 
-export const startBot = async (token, clientId, guildId) => {
+export const startBot = async (token, clientId, guildId, roleId) => {
     const client = new Client({
         intents: [
             GatewayIntentBits.Guilds,
@@ -94,8 +94,10 @@ export const startBot = async (token, clientId, guildId) => {
 
         const cmd = interaction.commandName;
         const sub = interaction.options.getSubcommand();
-
-        if (cmd === 'image') {
+        if (!interaction.member.roles.cache.has(roleId)) {
+            await interaction.reply({ content: `Lu siapa njir 😹`, ephemeral: true });
+        }
+        else if (cmd === 'image') {
             if (sub === 'upload') {
                 const title = interaction.options.getString('title');
                 const type = interaction.options.getString('type');
@@ -110,7 +112,7 @@ export const startBot = async (token, clientId, guildId) => {
                     const arrayBuffer = await response.arrayBuffer();
                     const buffer = Buffer.from(arrayBuffer);
                     uploadNewObject(`gallery/${title}.${type}`, buffer, `image/${type}`)
-                    const id = await insertImage(title, `cdn.s3.filekeeper.my.id/angkatan/gallery/${title}.${type}`)
+                    const id = await insertImage(title, `https://cdn.s3.filekeeper.my.id/angkatan/gallery/${title}.${type}`)
                     interaction.followUp({ content: `Image uploaded with ID **${id}**!` });
                 });
 
@@ -135,7 +137,7 @@ export const startBot = async (token, clientId, guildId) => {
                     const newPath = parts.join('/')
                     await copyObject(oldPath, newPath)
                     await removeObject(oldPath)
-                    await updateImageLink(id, 'cdn.s3.filekeeper.my.id/angkatan/' + newPath)
+                    await updateImageLink(id, 'https://cdn.s3.filekeeper.my.id/angkatan/' + newPath)
                     await interaction.reply({ content: `Image with ID **${id}** has been updated to **${title}**!` });
                 } catch (e) {
                     console.error(e)
